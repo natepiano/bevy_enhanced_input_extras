@@ -1,0 +1,8 @@
+[package]
+name = "bevy_enhanced_input_extras"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+bevy = { version = "0.18", default-features = false }
+bevy_enhanced_input = "0.24"
