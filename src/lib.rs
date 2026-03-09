@@ -15,7 +15,8 @@ use bevy_enhanced_input::prelude::*;
 /// ```
 #[macro_export]
 macro_rules! action {
-    ($action:ident) => {
+    ($(#[$meta:meta])* $action:ident) => {
+        $(#[$meta])*
         #[derive(InputAction)]
         #[action_output(bool)]
         pub struct $action;
@@ -24,22 +25,33 @@ macro_rules! action {
 
 /// Generates a Bevy `Event` struct for BRP-triggerable events.
 ///
+/// Unit event form:
 /// ```rust
 /// event!(PauseEvent);
 /// ```
 ///
-/// Expands to:
+/// Payload event form:
 /// ```rust
-/// #[derive(Event, Reflect, Default)]
-/// #[reflect(Event)]
-/// pub struct PauseEvent;
+/// event!(ZoomToTarget { entity: Entity });
 /// ```
+///
+/// Expands to either a unit struct with `Default`, or a named-field struct
+/// without `Default` when payload fields are provided.
 #[macro_export]
 macro_rules! event {
-    ($event:ident) => {
+    ($(#[$meta:meta])* $event:ident) => {
+        $(#[$meta])*
         #[derive(Event, Reflect, Default)]
         #[reflect(Event)]
         pub struct $event;
+    };
+    ($(#[$meta:meta])* $event:ident { $($field:ident : $ty:ty),+ $(,)? }) => {
+        $(#[$meta])*
+        #[derive(Event, Reflect)]
+        #[reflect(Event)]
+        pub struct $event {
+            $(pub $field: $ty,)+
+        }
     };
 }
 
