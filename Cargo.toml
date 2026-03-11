@@ -1,8 +1,10 @@
 [package]
-name = "bevy_enhanced_input_extras"
-version = "0.1.0"
 edition = "2024"
+name    = "bevy_enhanced_input_extras"
+version = "0.1.0"
 
 [dependencies]
 bevy = { version = "0.18", default-features = false }
-bevy_enhanced_input = { version = "0.24", default-features = false, features = ["reflect"] }
+bevy_enhanced_input = { version = "0.24", default-features = false, features = [
+  "reflect",
+] }

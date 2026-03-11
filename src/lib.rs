@@ -126,10 +126,10 @@ struct ControlModifier;
 /// - Platform shortcuts (`spawn_platform_key`) have no `BlockBy` since the modifier key itself
 ///   disambiguates
 pub struct Keybindings<C: Component> {
-    all_modifiers: Vec<Entity>,
+    all_modifiers:       Vec<Entity>,
     non_shift_modifiers: Vec<Entity>,
-    settings: ActionSettings,
-    _marker: std::marker::PhantomData<C>,
+    settings:            ActionSettings,
+    _marker:             std::marker::PhantomData<C>,
 }
 
 impl<C: Component> Keybindings<C> {
