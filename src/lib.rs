@@ -250,7 +250,7 @@ mod tests {
     event!(TestPayloadEvent { value: u32 });
 
     #[test]
-    fn unit_event_defaults() { let _event = TestEvent::default(); }
+    fn unit_event_defaults() { let _event = TestEvent; }
 
     #[test]
     fn payload_event_fields() {
