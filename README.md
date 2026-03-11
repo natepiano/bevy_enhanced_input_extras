@@ -1,5 +1,7 @@
 # bevy_enhanced_input_extras
 
+[![CI](https://github.com/natepiano/bevy_enhanced_input_extras/actions/workflows/ci.yml/badge.svg)](https://github.com/natepiano/bevy_enhanced_input_extras/actions/workflows/ci.yml)
+
 Shared keybinding utilities for [`bevy_enhanced_input`](https://github.com/projectharmonia/bevy_enhanced_input).
 
 ## Features
