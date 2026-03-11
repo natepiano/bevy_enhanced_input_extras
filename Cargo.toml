@@ -5,4 +5,4 @@ edition = "2024"
 
 [dependencies]
 bevy = { version = "0.18", default-features = false }
-bevy_enhanced_input = "0.24"
+bevy_enhanced_input = { version = "0.24", default-features = false, features = ["reflect"] }
