@@ -241,3 +241,20 @@ impl<C: Component> Keybindings<C> {
         spawner.spawn((Action::<A>::new(), self.settings, platform_bindings));
     }
 }
+
+#[cfg(test)]
+mod tests {
+    use super::*;
+
+    event!(TestEvent);
+    event!(TestPayloadEvent { value: u32 });
+
+    #[test]
+    fn unit_event_defaults() { let _event = TestEvent::default(); }
+
+    #[test]
+    fn payload_event_fields() {
+        let event = TestPayloadEvent { value: 42 };
+        assert_eq!(event.value, 42);
+    }
+}
