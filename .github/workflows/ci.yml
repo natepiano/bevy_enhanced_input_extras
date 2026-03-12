@@ -23,7 +23,7 @@ jobs:
     name: Format Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v5
 
       - name: Install Rust nightly
         uses: dtolnay/rust-toolchain@master
@@ -38,7 +38,7 @@ jobs:
     name: Taplo Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v5
 
       - name: Install Taplo
         run: cargo install taplo-cli --locked
@@ -50,13 +50,22 @@ jobs:
     name: Clippy
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v5
 
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@master
         with:
           toolchain: stable
           components: clippy
+
+      - name: Install mold linker
+        uses: rui314/setup-mold@v1
+
+      - name: Install and cache Linux dependencies
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: libudev-dev libasound2-dev pkg-config clang libwayland-dev libxkbcommon-dev
+          version: 1.0
 
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
@@ -68,12 +77,21 @@ jobs:
     name: Build Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v5
 
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@master
         with:
           toolchain: stable
+
+      - name: Install mold linker
+        uses: rui314/setup-mold@v1
+
+      - name: Install and cache Linux dependencies
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: libudev-dev libasound2-dev pkg-config clang libwayland-dev libxkbcommon-dev
+          version: 1.0
 
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
@@ -85,7 +103,7 @@ jobs:
     name: Test Suite
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v5
 
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@master
@@ -95,23 +113,52 @@ jobs:
       - name: Install cargo-nextest
         uses: taiki-e/install-action@nextest
 
+      - name: Install mold linker
+        uses: rui314/setup-mold@v1
+
+      - name: Install and cache Linux dependencies
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: libudev-dev libasound2-dev pkg-config clang libwayland-dev libxkbcommon-dev
+          version: 1.0
+
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
 
-      - name: Run tests
-        run: cargo nextest run --workspace --all-features
+      - name: Free disk space
+        run: |
+          sudo rm -rf /usr/share/dotnet
+          sudo rm -rf /usr/local/lib/android
+          sudo rm -rf /opt/ghc
+          df -h
+
+      - name: Run lib and integration tests
+        run: cargo nextest run --all-features --workspace --lib --tests
+        env:
+          WGPU_BACKEND: "gl"
+          WINIT_UNIX_BACKEND: "x11"
+          RUSTFLAGS: "-C link-arg=-fuse-ld=mold"
 
   mend:
     name: Mend Check
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v6
+      - uses: actions/checkout@v5
 
       - name: Install Rust stable
         uses: dtolnay/rust-toolchain@master
         with:
           toolchain: stable
           components: rust-src, rustc-dev, llvm-tools-preview
+
+      - name: Install mold linker
+        uses: rui314/setup-mold@v1
+
+      - name: Install and cache Linux dependencies
+        uses: awalsh128/cache-apt-pkgs-action@latest
+        with:
+          packages: libudev-dev libasound2-dev pkg-config clang libwayland-dev libxkbcommon-dev
+          version: 1.0
 
       - name: Cache Rust dependencies
         uses: Swatinem/rust-cache@v2
